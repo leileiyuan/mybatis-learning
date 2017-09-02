@@ -3,6 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <properties resource="db.properties"/>
+    <typeAliases>
+        <package name="com.belongtou.mybatis.model" />
+    </typeAliases>
 
     <environments default="development">
         <environment id="development">
@@ -18,5 +21,6 @@
 
     <mappers>
         <mapper resource="mapper/User.xml"/>
+        <mapper resource="mapper/UserMapper.xml"/>
     </mappers>
 </configuration>

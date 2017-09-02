@@ -9,14 +9,6 @@ public class User {
     private Date birthday;// 生日
     private String address;// 地址
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -49,10 +41,22 @@ public class User {
         this.address = address;
     }
 
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", username=" + username + ", sex=" + sex
-                + ", birthday=" + birthday + ", address=" + address + "]";
+    public int getId() {
+        return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", sex='" + sex + '\'' +
+                ", birthday=" + birthday +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }

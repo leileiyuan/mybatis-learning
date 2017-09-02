@@ -1,10 +1,12 @@
 package com.belongtou.mybatis;
 
+import com.belongtou.mybatis.mapper.UserMapper;
 import com.belongtou.mybatis.model.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,6 +59,22 @@ public class TestUser {
             sqlSession.insert(namespace + ".insertUser2", user);
             sqlSession.commit();
             System.out.println("获取主键: " +user.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testMapperSelectUserById() {
+        try {
+            sqlSession = sqlSessionFactory.openSession();
+            // 创建代理对象
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            User user = userMapper.selectUserById(3);
+            Assert.assertNotNull(user);
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
