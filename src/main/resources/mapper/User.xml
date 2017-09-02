@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 用来隔离sql语句，mapper开发dao的时候，用特殊用处？ -->
+<mapper namespace="com.belongtou.mybatis.model.User">
+
+    <!-- mapp.xml中配置的sql语句，执行每个sql语句时，都是封装为MapperStatement对象，以statement对象为单位管理sql -->
+
+    <select id="selectById" parameterType="int" resultType="com.belongtou.mybatis.model.User">
+        SELECT  * FROM  t_user  WHERE  id = #{id}
+    </select>
+
+    <!-- 两个问题：
+        1）#{}是怎么解析的 ：sql语句需要解析成 '%alex%' ，#{}表达的是一个占位符，要对入参作类型转换java—>jdbc，
+                所以入参形式应该是'%#{}%'，这个是无法解析的，那么要使用‘%${name}%’
+        2）#{}与${}的区别？
+            #{}是占位符，${}是变量值，直接替换，表示sql的拼接，入参不加任何修饰的拼接在sql中，那么是存在sql注入问题的。
+            解决：使用bind 从OGNl表达式中，创建一个变量并将其绑定到上下文
+     -->
+
+    <select id="selectByName" parameterType="java.lang.String" resultType="com.belongtou.mybatis.model.User">
+        <!-- SELECT  * FROM  t_user  WHERE  username LIKE  '%${value}%'-->
+        SELECT * FROM t_user WHERE username LIKE #{value}
+    </select>
+
+    <!-- mysql 获取自增主键
+        selectKey：返回主键
+        order：设置selectKey中sql执行的顺序，相对于insert来说，应该在插入之后再返回主键.order=after
+        keyProperty：将主键设置到哪个属性上
+        resultType： SELECT last_insert_id() 的结果类型
+     -->
+    <insert id="insertUser" parameterType="com.belongtou.mybatis.model.User">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            SELECT last_insert_id()
+        </selectKey>
+        INSERT INTO t_user (username,sex,birthday,address) VALUES (#{username},#{sex},#{birthday},#{address});
+    </insert>
+
+    <!--
+       useGeneratedKeys : true 使用主增主键
+       keyProperty：主键设置到指定的属性上
+    -->
+    <insert id="insertUser2" parameterType="com.belongtou.mybatis.model.User" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO t_user (username,sex,birthday,address) VALUES (#{username},#{sex},#{birthday},#{address});
+    </insert>
+
+    <insert id="insertUserForOracle" parameterType="com.belongtou.mybatis.model.User">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            SELECT USER_SEQ.nextval as id FROM  dual
+        </selectKey>
+        INSERT INTO t_user (username,sex,birthday,address) VALUES (#{username},#{sex},#{birthday},#{address});
+    </insert>
+
+</mapper>
